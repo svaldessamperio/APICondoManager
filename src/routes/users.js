@@ -37,7 +37,6 @@ router.post('/addUserToken/',async (req, res) => {
 
 router.get('/getUserDataByEmail/', (req, res) => {
     const { email } = req.query;
-    var salida;
     const qry = `CALL getUserDataByEmail(?);`;
 
     //if(!email=='undefined'){
@@ -55,6 +54,44 @@ router.get('/getUserDataByEmail/', (req, res) => {
             }
         });    
     //}
+});
+
+router.get('/getConfigSystem', (req, res)=>{
+    const { condominiumId } = req.query;
+    const qry = `CALL getConfigSystem(?);`;
+    mysqlConnection.query(qry, [condominiumId], (err, rows, fields) => {
+    if (!err) {
+        if(rows[0].length>0){
+            let ticketImages = {};
+            let ticketAdvertisements = {};
+            let generalParameters = {};
+            let payload = {};
+            for(let i=0;i<rows[0].length;i++) {
+                parameter = {...rows[0][i]};
+                let field = parameter.name;
+                switch (parameter.type) {
+                    case 'T': //Ticket Images
+                        ticketImages = {...ticketImages, [field]:parameter};
+                        break;
+                    case 'A': //Advertisement Images
+                        ticketAdvertisements = {...ticketAdvertisements, [field]:parameter};
+                        break;
+                    default:  //other ones
+                        generalParameters = {...generalParameters, [field]:parameter};
+                        break;
+                }
+            }
+            payload = {
+                ticketImages,
+                ticketAdvertisements,
+                generalParameters
+            }
+            res.json(payload);
+        }
+    } else {
+        console.log(err);
+    }
+    }); 
 });
 
 module.exports = router;
