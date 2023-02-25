@@ -60,14 +60,13 @@ router.post('/createTicket', (req, res)=>{
         if (!err) {
             ticketCreatedId = JSON.parse(JSON.stringify(rows[2][0]).replace("@","")).ticketCreated;
             payload = {ticketCreatedId}
-            console.log(JSON.stringify(payload));
             
             // Insert images
             const filesLoaded = new Array(forms.filesLoaded != undefined ? (forms.filesLoaded != null?forms.filesLoaded : []) : []);
             const qryImages = `CALL createTicketImages (?,?,?,?)`;
             for(i = 0; i < filesLoaded[0].length; i++){
-                console.log(JSON.stringify(filesLoaded[0][i]));
-                url = 'http://192.168.1.79/images/' + filesLoaded[0][i].filename;
+                //console.log(JSON.stringify(filesLoaded[0][i]));
+                url = 'http://192.168.1.78/images/' + filesLoaded[0][i].filename;
                 mysqlConnection.query(qryImages,[ forms.condominiumId, forms.unitId, ticketCreatedId, url ], (err, rows, fields)=>{
                 if (!err) {
                     console.log(rows);

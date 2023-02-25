@@ -17,6 +17,7 @@ app.use('/api/users', require('./routes/users'));
 app.use('/api/notify', require('./routes/notify'));
 app.use('/api/advertisements', require('./routes/advertisements'));
 app.use('/api/tickets', require('./routes/tickets'));
+app.use('/api/access', require('./routes/access'));
 app.use('/api/files', require('./routes/files'));
 
 //Starting Server
